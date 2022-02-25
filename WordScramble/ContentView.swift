@@ -8,20 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    let people = ["Fin", "Leia", "Luke", "Rey"]
     var body: some View {
-//        List(people, id: \.self){
-//            Text("\($0)")
-        List{
-            Text("Static Row 1")
-            ForEach(people, id: \.self){
-                Text("\($0)")
+        
+    }
+    
+    func loadFile() {
+        if let fileURL = Bundle.main.url(forResource: "some-file", withExtension: "txt") {
+            //here means file was found inside installed app bundle on user device and can be loaded
+            if let fileContents = try? String(contentsOf: fileURL) {
+                //here means loaded file into string fileContents
             }
-            Text("Static Row 2")
-            Text("Static Row 3")
-            
         }
-        .listStyle(.grouped)
     }
 }
 
