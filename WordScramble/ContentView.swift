@@ -8,30 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var usedWords = [String]()
+    @State private var rootWord = ""
+    @State private var newWord = ""
+    
     var body: some View {
-        
+        NavigationView{
+            List{
+                Section{
+                    TextField("Enter you word", text: $newWord)
+                        .autocapitalization(.none)
+                        .onSubmit(addNewWord)
+                }
+                Section{
+                    ForEach(usedWords, id: \.self){ word in
+                        HStack{
+                            Image(systemName: "\(word.count).circle")
+                            Text(word)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(rootWord)
+        }
     }
     
-    func test(){
-        let input = """
-a
-b
-c
-"""
-        let letters = input.components(separatedBy: "\n")
-        let letter = letters.randomElement()
-        //removes white space and new line
-        let trimmed = letter?.trimmingCharacters(in: .whitespacesAndNewlines)
+    func addNewWord() {
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard answer.count > 0 else { return }
         
-        let word = "swift"
-        let checker = UITextChecker()
-        //.utf16 is a character encoding to allow for Objective C to understand Swift strings
-        let range = NSRange(location: 0, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
-        //checks if mispelledRange comes back empty
-        let allGood = misspelledRange.location == NSNotFound
+        //Extra validation to come
+        withAnimation{
+            usedWords.insert(answer, at: 0)
+        }
+        newWord = ""
     }
-}e
+}
+    
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
