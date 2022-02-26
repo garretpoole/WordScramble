@@ -36,6 +36,7 @@ struct ContentView: View {
             .navigationTitle(rootWord)
             .onAppear(perform: startGame)
             
+            
             .alert(errorTitle, isPresented: $showingError){
                 Button("OK", role: .cancel){}
             } message: {
@@ -57,7 +58,15 @@ struct ContentView: View {
     
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard answer.count > 0 else { return }
+        guard answer.count > 3 else {
+            wordError(title: "Word is too small", message: "Must be 3 letters or more")
+            return
+        }
+        
+        guard !(answer==rootWord) else {
+            wordError(title: "Cannot use root word", message: "Really...")
+            return
+        }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word already used", message: "Be original")
