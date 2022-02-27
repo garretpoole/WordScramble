@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var usedWords = [String]()
     @State private var rootWord = ""
     @State private var newWord = ""
+    @State private var currentScore = 0
     
     @State private var errorTitle = ""
     @State private var errorMessage = ""
@@ -20,6 +21,7 @@ struct ContentView: View {
         NavigationView{
             List{
                 Section{
+                    Text("Score: \(currentScore)")
                     TextField("Enter you word", text: $newWord)
                         .autocapitalization(.none)
                         .onSubmit(addNewWord)
@@ -49,6 +51,7 @@ struct ContentView: View {
     
     func startGame() {
         usedWords = [String]()
+        currentScore = 0
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt"){
             if let startWords = try? String(contentsOf: startWordsURL){
                 let allWords = startWords.components(separatedBy: "\n")
@@ -61,7 +64,7 @@ struct ContentView: View {
     
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard answer.count > 3 else {
+        guard answer.count >= 3 else {
             wordError(title: "Word is too small", message: "Must be 3 letters or more")
             return
         }
@@ -88,6 +91,7 @@ struct ContentView: View {
         
         withAnimation{
             usedWords.insert(answer, at: 0)
+            currentScore += answer.count
         }
         newWord = ""
     }
